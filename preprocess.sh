@@ -34,16 +34,16 @@ main() {
   fi
 
   # Loop over each line of the input file
-  while IFS= read -r line_raw
+  while IFS= read -r line
   do
-    line=$(string::trim "$line_raw")
+    line_trim=$(string::trim "$line")
     line_number=$((line_number+1))
 
     if [[ "${in_macro}" == "false" ]]; then
-      if [[ "${line}" == "${end}" ]];
+      if [[ "${line_trim}" == "${end}" ]];
       then
         error "Unmatched ${end} found"
-      elif [[ "${line}" == "${start}" ]];
+      elif [[ "${line_trim}" == "${start}" ]];
       then
         in_macro="true"
         echo "${shebang_line}" > $macro_code
@@ -51,10 +51,10 @@ main() {
         echo "$line" >> $tmp
       fi
     else
-      if [[ "${line}" == "${start}" ]];
+      if [[ "${line_trim}" == "${start}" ]];
       then
         error "${start} can not be nested"
-      elif [[ "${line}" == "${end}" ]];
+      elif [[ "${line_trim}" == "${end}" ]];
       then
         in_macro="false"
         chmod +x $macro_code
